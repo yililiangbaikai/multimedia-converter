@@ -56,8 +56,9 @@ public class FfmpegVideoConverter {
 					//File file = (File)cache.get(thekey);
 					File file = (File)cache.get(thekey).getObjectValue();
 					String originPath = file.getAbsolutePath();
-					log.info("flv源文件地址：" + originPath);
+					
 					String destPath = originPath.toLowerCase().replace(".flv", ".mp4");
+					log.info("flv源文件地址:" + originPath + "dest地址:" + destPath);
 					//保证ffmpeg进程数只为10才往下执行
 					while(!countFFmpegProcessLessThan10("ffmpeg")){
 						//写日志，挂起程序

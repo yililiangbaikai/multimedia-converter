@@ -85,7 +85,11 @@ public class CmdExecuter {
 	public static int getProcessCount(List<String> cmd) {
 		int count = 0;
 		try {
-			Process proc = Runtime.getRuntime().exec("ps -ef | grep ffmpeg | wc -l");
+			//Process proc = Runtime.getRuntime().exec("ps -ef | grep ffmpeg | wc -l");这个方法会阻塞需要对输入输出流进行处理
+			ProcessBuilder builder = new ProcessBuilder();
+			builder.command("ps -ef | grep ffmpeg | wc -l");
+			builder.redirectErrorStream(true);
+			Process proc = builder.start();
 			BufferedReader stdout = new BufferedReader(new InputStreamReader(
 					proc.getInputStream()));
 			String line;

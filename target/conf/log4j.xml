@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="default" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="/app/log/converter.html" />
+       
+        <param name="Append" value="true" />
+        <param name="MaxBackupIndex" value="10" />
+        <param name="MaxFileSize" value="500KB" />
+        <param name="Encoding" value = "UTF-8"/>
+        <layout class="com.bingo.multimediaconverter.common.HTMLLayout">
+            <param name="Title" value="ffmpeg video converter系统日志" />
+        </layout>
+    </appender>
+
+    <root>
+        <priority value="DEBUG" />
+        <appender-ref ref="default" />
+    </root>
+
+</log4j:configuration>

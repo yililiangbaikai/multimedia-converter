@@ -58,6 +58,9 @@ public class FfmpegVideoConverter {
 					String originPath = file.getAbsolutePath();
 					
 					String destPath = originPath.toLowerCase().replace(".flv", ".mp4");
+					if(new File(destPath).exists()){
+						continue;
+					}
 					log.info("flv源文件地址:" + originPath + "dest地址:" + destPath);
 					//保证ffmpeg进程数只为10才往下执行
 					while(!countFFmpegProcessLessThan10("ffmpeg")){

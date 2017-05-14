@@ -78,9 +78,9 @@ public class FfmpegVideoConverter {
 		List<String> cmdParams = new ArrayList<String>();
 		cmdParams.add("ps");
 		cmdParams.add("-ef");
-		cmdParams.add("| grep");
+		cmdParams.add("|grep");
 		cmdParams.add(processName);
-		cmdParams.add("| wc");
+		cmdParams.add("|wc");
 		cmdParams.add("-l");
 		return CmdExecuter.getProcessCount(cmdParams) < 10;
 	}

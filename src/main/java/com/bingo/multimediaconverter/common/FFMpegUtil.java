@@ -99,6 +99,7 @@ public class FFMpegUtil implements IStringGetter {
 		cmd.clear();
 		cmd.add(ffmpegUri);
 		cmd.add("-y");
+		cmd.add("-i");
 		cmd.add(originFileUri);
 		cmd.add("-acodec");
 		cmd.add("libfdk_aac");

@@ -93,6 +93,7 @@ public class CmdExecuter {
 					proc.getInputStream()));
 			String line;
 			while ((line = stdout.readLine()) != null) {
+				System.out.println(line);
 				count = Integer.parseInt(line.trim()); 
 			}
 			proc.waitFor();

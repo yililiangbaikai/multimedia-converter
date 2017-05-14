@@ -22,7 +22,7 @@ public class FfmpegVideoConverter {
 	/**
 	 * 待转换文件根目录
 	 */
-	public final static String ROOT_PATH = "/nas/SYPB";
+	public final static String ROOT_PATH = "/nas/SYPB/2017";
 	
 	/**
 	 * 初始化ehcahe缓存实例

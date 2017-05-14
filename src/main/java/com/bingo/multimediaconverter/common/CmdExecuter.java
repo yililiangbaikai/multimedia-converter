@@ -85,10 +85,7 @@ public class CmdExecuter {
 	public static int getProcessCount(List<String> cmd) {
 		int count = 0;
 		try {
-			ProcessBuilder builder = new ProcessBuilder();
-			builder.command(cmd);
-			builder.redirectErrorStream(true);
-			Process proc = builder.start();
+			Process proc = Runtime.getRuntime().exec("ps -ef | grep ffmpeg | wc -l");
 			BufferedReader stdout = new BufferedReader(new InputStreamReader(
 					proc.getInputStream()));
 			String line;

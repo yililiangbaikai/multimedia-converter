@@ -121,6 +121,7 @@ public class FfmpegVideoConverter {
 		@Override
 		public void run() {
 			//扫描文件夹
+			new FileScannerToCache(cache);
 			FileScannerToCache.scan(new File(ROOT_PATH));
 		}
 		

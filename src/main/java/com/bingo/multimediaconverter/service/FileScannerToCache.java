@@ -30,7 +30,7 @@ public class FileScannerToCache {
 			//如果扫描磁盘发现该文件是flv且没有加入缓存则放入缓存
 			String fileName = lf.getName();
 			if(lf.isFile() && fileName.toLowerCase().contains("flv") && cache.get(fileName) == null){
-				cache.put(new Element("fileName", lf));
+				cache.put(new Element(fileName , lf));
 				log.info("get flv file name:" + fileName + ", 文件路径" + lf.getAbsolutePath());
 			}else{
 				scan(lf);

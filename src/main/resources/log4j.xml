@@ -7,7 +7,7 @@
         <param name="File" value="/app/log/converter.html" />
        
         <param name="Append" value="true" />
-        <param name="MaxBackupIndex" value="10" />
+        <param name="MaxBackupIndex" value="100" />
         <param name="MaxFileSize" value="500KB" />
         <param name="Encoding" value = "UTF-8"/>
         <layout class="com.bingo.multimediaconverter.common.HTMLLayout">

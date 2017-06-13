@@ -29,8 +29,12 @@ public class FileScannerToCache {
 		for(File lf: listFiles){
 			//如果扫描磁盘发现该文件是flv且没有加入缓存则放入缓存
 			String fileName = lf.getName();
-			if(lf.isFile() && fileName.toLowerCase().contains("flv") && cache.get(fileName) == null){
-				cache.put(new Element(fileName , lf));
+			if(lf.isFile() && fileName.toLowerCase().contains("flv")){
+				if(cache.get(fileName) == null && !new File(lf.getAbsolutePath().replace("flv", "mp4")).exists()){
+					cache.put(new Element(fileName , lf));
+				}else if(cache.get(fileName) != null && new File(lf.getAbsolutePath().replace("flv", "mp4")).exists()){
+					cache.remove(fileName);
+				}
 				log.info("get flv file name:" + fileName + ", 文件路径" + lf.getAbsolutePath());
 			}else{
 				scan(lf);

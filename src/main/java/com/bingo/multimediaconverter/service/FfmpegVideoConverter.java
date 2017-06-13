@@ -59,14 +59,15 @@ public class FfmpegVideoConverter {
 					
 					String destPath = originPath.toLowerCase().replace(".flv", ".mp4");
 					if(new File(destPath).exists()){
+						log.info(destPath+"文件已存在跳过");
 						continue;
 					}
 					log.info("flv源文件地址:" + originPath + "dest地址:" + destPath);
 					//保证ffmpeg进程数只为10才往下执行
-					while(!countFFmpegProcessLessThan10("ffmpeg")){
+					/*while(!countFFmpegProcessLessThan10("ffmpeg")){
 						//写日志，挂起程序
 						log.info("当前ffmpeg进程数为：" + countFFmpegProcessLessThan10("ffmpeg"));
-					}
+					}*/
 					log.info("flv2mp4转换开始：");
 					FfmpegVideoConverter.Flv2Mp4Process flv2Mp4Process = new FfmpegVideoConverter().new Flv2Mp4Process(originPath, destPath);
 					flv2Mp4Process.run();

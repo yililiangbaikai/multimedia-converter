@@ -3,6 +3,7 @@ package com.bingo.multimediaconverter.service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.bingo.multimediaconverter.common.CmdExecuter;
 import com.bingo.multimediaconverter.common.FFMpegUtil;
@@ -28,6 +29,9 @@ public class FfmpegVideoConverter {
 	 * 初始化ehcahe缓存实例
 	 */
 	public static Cache cache = null;
+	
+	public static Set<String> d = new java.util.concurrent.ConcurrentSkipListSet<String>();
+
 	
 	static {
 		if(cache == null){
@@ -64,7 +68,7 @@ public class FfmpegVideoConverter {
 					}
 					log.info("flv源文件地址:" + originPath + "dest地址:" + destPath);
 					//保证ffmpeg进程数只为10才往下执行
-					while(!countFFmpegProcessLessThan10("ffmpeg")){
+					while(d.size() > 10){
 						//写日志，挂起程序
 						log.info("当前ffmpeg进程数为：" + countFFmpegProcessLessThan10("ffmpeg"));
 					}
@@ -114,8 +118,10 @@ public class FfmpegVideoConverter {
 		public void run() {
 			//扫描文件夹
 			System.out.println("开始时间："+System.currentTimeMillis());
+			d.add(originPath);
 			new FFMpegUtil("ffmpeg", originPath, destPath).flv2Mp4();
 			System.out.println("结束时间："+System.currentTimeMillis());
+			d.remove(originPath);
 		}
 		
 	}

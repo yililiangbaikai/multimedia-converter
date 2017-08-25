@@ -11,17 +11,22 @@ public class FileScannerToCache {
 	
 	private final static Log log = Log.getLog(FileScannerToCache.class);
 	
-	private static Cache cache;
+	private Cache cache;
+	/**
+	 * 待处理文件类型正则串
+	 */
+	private static String fileTypeStr = ".avi|.m2p|.swf|.flv|.wmv";
 	
-	public FileScannerToCache (Cache cache){
+	public FileScannerToCache (Cache cache, String fileTypeStr){
 		this.cache = cache;
 	}
 	
 	/**
 	 * 扫描文件夹,并将文件信息放入缓存
 	 * @param file
+	 * @param fileTypeStr 待扫描处理的文件类型 如：".avi|.mp4|.swf|.flv|.wmv"
 	 */
-	public static void scan(File file){
+	public void scan(File file){
 		if(file.isFile()){
 			return;
 		}
@@ -29,13 +34,13 @@ public class FileScannerToCache {
 		for(File lf: listFiles){
 			//如果扫描磁盘发现该文件是flv且没有加入缓存则放入缓存
 			String fileName = lf.getName();
-			if(lf.isFile() && fileName.toLowerCase().contains("flv")){
-				if(cache.get(fileName) == null && !new File(lf.getAbsolutePath().replace("flv", "mp4")).exists()){
+			if(lf.isFile() && fileTypeStr.contains(fileName.substring(fileName.lastIndexOf(".")))){
+				if(cache.get(fileName) == null && !new File(lf.getAbsolutePath().replaceAll(fileTypeStr, ".mp4")).exists()){
 					cache.put(new Element(fileName , lf));
-				}else if(cache.get(fileName) != null && new File(lf.getAbsolutePath().replace("flv", "mp4")).exists()){
+				}else if(cache.get(fileName) != null && new File(lf.getAbsolutePath().replace(fileTypeStr, ".mp4")).exists()){
 					cache.remove(fileName);
 				}
-				log.info("get flv file name:" + fileName + ", 文件路径" + lf.getAbsolutePath());
+				log.info("get video file name:" + fileName + ", 文件路径" + lf.getAbsolutePath());
 			}else{
 				scan(lf);
 			}

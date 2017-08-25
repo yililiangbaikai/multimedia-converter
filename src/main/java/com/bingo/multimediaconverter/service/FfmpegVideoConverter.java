@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.bingo.multimediaconverter.common.CmdExecuter;
 import com.bingo.multimediaconverter.common.FFMpegUtil;
 import com.bingo.multimediaconverter.common.Log;
@@ -30,6 +32,8 @@ public class FfmpegVideoConverter {
 	 */
 	public static Cache cache = null;
 	
+	public static String defaultFileTypeStr = ".flv|.m2p|.wmv|.avi|.swf";
+	
 	public static Set<String> d = new java.util.concurrent.ConcurrentSkipListSet<String>();
 
 	
@@ -42,13 +46,26 @@ public class FfmpegVideoConverter {
 	
 	public static void main(String[] args) {
 		System.out.println("This is ffmpegVideoConverter program.");
-		File targetDir = new File(ROOT_PATH);
+		//取命令行中传递过来的路径参数,第一个为待扫描文件根目录，第二个为待扫描文件类型
+		String destDir = args[0];
+		String fileTypeStr = args[1];
+		File targetDir = null;
+		//如果没有传参取默认值
+		if(StringUtils.isNotBlank(destDir)){
+			targetDir = new File(destDir);
+		}else{
+			targetDir = new File(ROOT_PATH);
+		}
+		if(StringUtils.isBlank(fileTypeStr)){
+			fileTypeStr = defaultFileTypeStr;
+		}
+		 
 		if(!targetDir.exists() || !targetDir.isDirectory()){
 			log.error("根目录不存在");
 			return;
 		}
 		
-		FfmpegVideoConverter.FileScannerProcess scanProcess = new FfmpegVideoConverter().new FileScannerProcess();
+		FfmpegVideoConverter.FileScannerProcess scanProcess = new FfmpegVideoConverter().new FileScannerProcess(fileTypeStr);
 		new Thread(scanProcess).start();
 		
 		while(true){
@@ -61,18 +78,18 @@ public class FfmpegVideoConverter {
 					File file = (File)cache.get(thekey).getObjectValue();
 					String originPath = file.getAbsolutePath();
 					
-					String destPath = originPath.toLowerCase().replace(".flv", ".mp4");
+					String destPath = originPath.toLowerCase().replaceAll("("+fileTypeStr+")", ".mp4");
 					if(new File(destPath).exists()){
 						log.info(destPath+"文件已存在跳过");
 						continue;
 					}
-					log.info("flv源文件地址:" + originPath + "dest地址:" + destPath);
+					log.info("video源文件地址:" + originPath + "dest地址:" + destPath);
 					//保证ffmpeg进程数只为10才往下执行
 					while(d.size() > 10){
 						//写日志，挂起程序
 						log.info("当前ffmpeg进程数为：" + countFFmpegProcessLessThan10("ffmpeg"));
 					}
-					log.info("flv2mp4转换开始：");
+					log.info("video2mp4转换开始：");
 					FfmpegVideoConverter.Flv2Mp4Process flv2Mp4Process = new FfmpegVideoConverter().new Flv2Mp4Process(originPath, destPath);
 					new Thread(flv2Mp4Process).start();
 				}
@@ -132,12 +149,17 @@ public class FfmpegVideoConverter {
 	 *
 	 */
 	private class FileScannerProcess implements Runnable{
+		
+		private String fileTypeStr;
+		
+		public FileScannerProcess(String fileTypeStr){
+			this.fileTypeStr = fileTypeStr;
+		}
 
 		@Override
 		public void run() {
 			//扫描文件夹
-			new FileScannerToCache(cache);
-			FileScannerToCache.scan(new File(ROOT_PATH));
+			new FileScannerToCache(cache, fileTypeStr).scan(new File(ROOT_PATH));
 		}
 		
 	}

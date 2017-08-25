@@ -66,7 +66,7 @@ public class FfmpegVideoConverter {
 			return;
 		}
 		
-		FfmpegVideoConverter.FileScannerProcess scanProcess = new FfmpegVideoConverter().new FileScannerProcess(fileTypeStr);
+		FfmpegVideoConverter.FileScannerProcess scanProcess = new FfmpegVideoConverter().new FileScannerProcess(fileTypeStr, destDir);
 		new Thread(scanProcess).start();
 		
 		while(true){
@@ -153,14 +153,17 @@ public class FfmpegVideoConverter {
 		
 		private String fileTypeStr;
 		
-		public FileScannerProcess(String fileTypeStr){
+		private String destPath;
+		
+		public FileScannerProcess(String fileTypeStr, String destPath){
 			this.fileTypeStr = fileTypeStr;
+			this.destPath = destPath;
 		}
 
 		@Override
 		public void run() {
 			//扫描文件夹
-			new FileScannerToCache(cache, fileTypeStr).scan(new File(ROOT_PATH));
+			new FileScannerToCache(cache, fileTypeStr).scan(new File(destPath));
 		}
 		
 	}

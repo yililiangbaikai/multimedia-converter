@@ -37,7 +37,7 @@ public class FileScannerToCache {
 			if(lf.isFile() && fileTypeStr.contains(fileName.substring(fileName.lastIndexOf(".")))){
 				if(cache.get(fileName) == null && !new File(lf.getAbsolutePath().replaceAll(fileTypeStr, ".mp4")).exists()){
 					cache.put(new Element(fileName , lf));
-				}else if(cache.get(fileName) != null && new File(lf.getAbsolutePath().replace(fileTypeStr, ".mp4")).exists()){
+				}else if(cache.get(fileName) != null && new File(lf.getAbsolutePath().replaceAll(fileTypeStr, ".mp4")).exists()){
 					cache.remove(fileName);
 				}
 				log.info("get video file name:" + fileName + ", 文件路径" + lf.getAbsolutePath());

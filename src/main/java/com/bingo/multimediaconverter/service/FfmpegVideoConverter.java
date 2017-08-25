@@ -46,6 +46,7 @@ public class FfmpegVideoConverter {
 	
 	public static void main(String[] args) {
 		System.out.println("This is ffmpegVideoConverter program.");
+		System.out.println("参数1：" + args[0]  + "\n参数2" + args[1]);
 		//取命令行中传递过来的路径参数,第一个为待扫描文件根目录，第二个为待扫描文件类型
 		String destDir = args[0];
 		String fileTypeStr = args[1];

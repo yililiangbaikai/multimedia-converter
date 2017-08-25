@@ -94,12 +94,7 @@ public class FfmpegVideoConverter {
 					log.info("video2mp4转换开始：");
 					FfmpegVideoConverter.Flv2Mp4Process flv2Mp4Process = new FfmpegVideoConverter().new Flv2Mp4Process(originPath, destPath);
 					new Thread(flv2Mp4Process).start();
-				}
-				try {
-					//休眠一下避免
-					Thread.sleep(60000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+					d.add(originPath);
 				}
 			}
 		}
@@ -143,7 +138,7 @@ public class FfmpegVideoConverter {
 		public void run() {
 			//扫描文件夹
 			System.out.println("开始时间："+System.currentTimeMillis());
-			d.add(originPath);
+			
 			new FFMpegUtil("ffmpeg", originPath, destPath).flv2Mp4();
 			System.out.println("结束时间："+System.currentTimeMillis());
 			d.remove(originPath);

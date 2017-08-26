@@ -94,8 +94,8 @@ public class FfmpegVideoConverter {
 					String destPath = originPath.toLowerCase().replaceAll("("+fileTypeStr+")", ".mp4");
 					if(new File(destPath).exists()){
 						log.info(destPath+"清空该缓存并跳过转换");
-						cache.remove(originPath);
-						continue;
+						cache.remove(thekey);
+						break;
 					}
 					log.info("video源文件地址:" + originPath + "dest地址:" + destPath);
 					//保证ffmpeg进程数只为10才往下执行
@@ -108,6 +108,12 @@ public class FfmpegVideoConverter {
 					d.add(originPath);
 					FfmpegVideoConverter.Flv2Mp4Process flv2Mp4Process = new FfmpegVideoConverter().new Flv2Mp4Process(originPath, destPath);
 					new Thread(flv2Mp4Process).start();
+				}
+				//主进程休眠，等待转换任务完成，减小磁盘IO压力
+				try {
+					Thread.sleep(60000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 		}

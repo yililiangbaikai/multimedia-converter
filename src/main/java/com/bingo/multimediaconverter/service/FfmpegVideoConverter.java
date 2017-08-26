@@ -71,12 +71,21 @@ public class FfmpegVideoConverter {
 		FfmpegVideoConverter.FileScannerProcess scanProcess = new FfmpegVideoConverter().new FileScannerProcess(fileTypeStr, destDir);
 		new Thread(scanProcess).start();
 		
+		try {
+			Thread.sleep(60000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		while(true){
 			if(cache.getSize() == 0){
 				log.info("没有找到需要转换的文件，当前无操作。");
+				//没有可以转换的视频则终止本程序
+				System.exit(0);
 			}else{
 				for(int i=0; i<cache.getKeys().size(); i++){
-					System.out.println(cache.getSize());
+					System.out.println("待转换文件个数："+cache.getSize());
+					log.info("待转换文件个数："+cache.getSize());
 					Object thekey = cache.getKeys().get(i);
 					//File file = (File)cache.get(thekey);
 					File file = (File)cache.get(thekey).getObjectValue();
@@ -84,26 +93,21 @@ public class FfmpegVideoConverter {
 					
 					String destPath = originPath.toLowerCase().replaceAll("("+fileTypeStr+")", ".mp4");
 					if(new File(destPath).exists()){
-						log.info(destPath+"文件已存在跳过");
+						log.info(destPath+"清空该缓存并跳过转换");
+						cache.remove(originPath);
 						continue;
 					}
 					log.info("video源文件地址:" + originPath + "dest地址:" + destPath);
 					//保证ffmpeg进程数只为10才往下执行
-				    while(d.size() > 8){//|| !countFFmpegProcessLessThan10("ffmpeg")){
+				    if(d.size() > 8){//|| !){
 						//写日志，挂起程序
+				    	countFFmpegProcessLessThan10("ffmpeg");
 						log.info("队列已满，等待文件处理完出队。");
 						break;
 					}
-					System.out.println("video2mp4转换开始：");
 					d.add(originPath);
 					FfmpegVideoConverter.Flv2Mp4Process flv2Mp4Process = new FfmpegVideoConverter().new Flv2Mp4Process(originPath, destPath);
 					new Thread(flv2Mp4Process).start();
-				}
-				try {
-					Thread.sleep(60000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}
 			}
 		}
@@ -122,6 +126,7 @@ public class FfmpegVideoConverter {
 		cmdParams.add(processName);
 		cmdParams.add("|wc");
 		cmdParams.add("-l");
+		System.out.println(processName + "进程数：" + CmdExecuter.getProcessCount(cmdParams));
 		return CmdExecuter.getProcessCount(cmdParams) < 10;
 	}
 	
@@ -146,9 +151,10 @@ public class FfmpegVideoConverter {
 		@Override
 		public void run() {
 			//扫描文件夹
-			System.out.println("开始时间："+ new SimpleDateFormat("HH:mm:ss").format(new Date()));
+			String beginTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
 			new FFMpegUtil("ffmpeg", originPath, destPath).flv2Mp4();
-			System.out.println("结束时间："+ new SimpleDateFormat("HH:mm:ss").format(new Date()));
+			String endTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
+			System.out.println(originPath+"转换开始时间:"+beginTime+"结束时间："+endTime );
 			d.remove(originPath);
 		}
 		

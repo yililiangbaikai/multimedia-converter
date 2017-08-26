@@ -87,7 +87,7 @@ public class CmdExecuter {
 		try {
 			//Process proc = Runtime.getRuntime().exec("ps -ef | grep ffmpeg | wc -l");这个方法会阻塞需要对输入输出流进行处理
 			ProcessBuilder builder = new ProcessBuilder();
-			builder.command("ps");
+			builder.command(cmd);
 			builder.redirectErrorStream(true);
 			Process proc = builder.start();
 			BufferedReader stdout = new BufferedReader(new InputStreamReader(

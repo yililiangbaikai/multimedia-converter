@@ -1,7 +1,9 @@
 package com.bingo.multimediaconverter.service;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -74,6 +76,7 @@ public class FfmpegVideoConverter {
 				log.info("没有找到需要转换的文件，当前无操作。");
 			}else{
 				for(int i=0; i<cache.getKeys().size(); i++){
+					System.out.println(cache.getSize());
 					Object thekey = cache.getKeys().get(i);
 					//File file = (File)cache.get(thekey);
 					File file = (File)cache.get(thekey).getObjectValue();
@@ -86,12 +89,12 @@ public class FfmpegVideoConverter {
 					}
 					log.info("video源文件地址:" + originPath + "dest地址:" + destPath);
 					//保证ffmpeg进程数只为10才往下执行
-				    while(d.size() > 8 || !countFFmpegProcessLessThan10("ffmpeg")){
+				    while(d.size() > 8){//|| !countFFmpegProcessLessThan10("ffmpeg")){
 						//写日志，挂起程序
-						log.info("当前ffmpeg进程数为：");
+						log.info("队列已满，等待文件处理完出队。");
 						break;
 					}
-					log.info("video2mp4转换开始：");
+					System.out.println("video2mp4转换开始：");
 					d.add(originPath);
 					FfmpegVideoConverter.Flv2Mp4Process flv2Mp4Process = new FfmpegVideoConverter().new Flv2Mp4Process(originPath, destPath);
 					new Thread(flv2Mp4Process).start();
@@ -137,10 +140,9 @@ public class FfmpegVideoConverter {
 		@Override
 		public void run() {
 			//扫描文件夹
-			System.out.println("开始时间："+System.currentTimeMillis());
-			
+			System.out.println("开始时间："+ new SimpleDateFormat("HH:mm:ss").format(new Date()));
 			new FFMpegUtil("ffmpeg", originPath, destPath).flv2Mp4();
-			System.out.println("结束时间："+System.currentTimeMillis());
+			System.out.println("结束时间："+ new SimpleDateFormat("HH:mm:ss").format(new Date()));
 			d.remove(originPath);
 		}
 		

@@ -107,6 +107,7 @@ public class FFMpegUtil implements IStringGetter {
 		cmd.add("libx264");
 		cmd.add(path);
 		CmdExecuter.exec(cmd, this);
+		System.out.println(cmd.toString());
 		return true;
 	}
 

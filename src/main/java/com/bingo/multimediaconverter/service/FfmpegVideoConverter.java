@@ -92,9 +92,9 @@ public class FfmpegVideoConverter {
 						break;
 					}
 					log.info("video2mp4转换开始：");
+					d.add(originPath);
 					FfmpegVideoConverter.Flv2Mp4Process flv2Mp4Process = new FfmpegVideoConverter().new Flv2Mp4Process(originPath, destPath);
 					new Thread(flv2Mp4Process).start();
-					d.add(originPath);
 				}
 			}
 		}

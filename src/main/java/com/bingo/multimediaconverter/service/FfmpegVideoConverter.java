@@ -99,6 +99,12 @@ public class FfmpegVideoConverter {
 					FfmpegVideoConverter.Flv2Mp4Process flv2Mp4Process = new FfmpegVideoConverter().new Flv2Mp4Process(originPath, destPath);
 					new Thread(flv2Mp4Process).start();
 				}
+				try {
+					Thread.sleep(60000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}

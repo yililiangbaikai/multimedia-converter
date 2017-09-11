@@ -1,6 +1,8 @@
 package com.bingo.multimediaconverter.service;
 
 import java.io.File;
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +51,17 @@ public class FfmpegVideoConverter {
 	public static void main(String[] args) {
 		System.out.println("This is ffmpegVideoConverter program.");
 		System.out.println("参数1：" + args[0]  + "\n参数2" + args[1]);
+		try { 
+		  LocateRegistry.createRegistry(1099);
+	      //实例化实现了IRmiService接口的远程服务IRmiServiceImpl对象 
+	      IRmiService service = new IRmiServiceImpl("convert2MP4"); 
+	      //将名称绑定到对象,即向命名空间注册已经实例化的远程服务对象 
+	      Naming.rebind("rmi://20.20.23.203:1099/convert2MP4", service); 
+	    } catch (Exception e) {
+	      e.printStackTrace();
+	      log.error(e);
+	    } 
+	    System.out.println("服务器向命名表注册了1个远程服务对象！"); 
 		//取命令行中传递过来的路径参数,第一个为待扫描文件根目录，第二个为待扫描文件类型
 		String destDir = args[0];
 		String fileTypeStr = args[1];

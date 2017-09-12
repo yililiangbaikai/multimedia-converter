@@ -81,7 +81,7 @@ public class FfmpegVideoConverter {
 			return;
 		}
 		
-		FfmpegVideoConverter.FileScannerProcess scanProcess = new FfmpegVideoConverter().new FileScannerProcess(fileTypeStr, destDir);
+		FileScannerProcess scanProcess = new FfmpegVideoConverter().new FileScannerProcess(fileTypeStr, destDir);
 		new Thread(scanProcess).start();
 		
 		try {
@@ -119,7 +119,7 @@ public class FfmpegVideoConverter {
 						break;
 					}
 					d.add(originPath);
-					FfmpegVideoConverter.Flv2Mp4Process flv2Mp4Process = new FfmpegVideoConverter().new Flv2Mp4Process(originPath, destPath);
+					Flv2Mp4Process flv2Mp4Process = new FfmpegVideoConverter().new Flv2Mp4Process(originPath, destPath);
 					new Thread(flv2Mp4Process).start();
 				}
 				//主进程休眠，等待转换任务完成，减小磁盘IO压力

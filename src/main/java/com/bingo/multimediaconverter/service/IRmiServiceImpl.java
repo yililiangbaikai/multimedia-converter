@@ -26,18 +26,45 @@ public class IRmiServiceImpl extends UnicastRemoteObject implements IRmiService{
 	public IRmiServiceImpl(String name) throws RemoteException { 
 		this.name = name; 
 	} 
+	
+	/**
+	 * ffmpeg 文件转换进程
+	 * @author long.xin
+	 *
+	 */
+	private class Flv2Mp4Process implements Runnable{
+		
+		private String originPath;
+		
+		private String destPath;
+		
+		
+		public Flv2Mp4Process(String originPath, String destPath) {
+			super();
+			this.originPath = originPath;
+			this.destPath = destPath;
+		}
+
+		@Override
+		public void run() {
+			String beginTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
+			new FFMpegUtil("ffmpeg", originPath, destPath).flv2Mp4();
+			String endTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
+			System.out.println(originPath + "远程调用转换开始时间:" + beginTime + "结束时间：" + endTime );
+		}
+		
+	}
 
 	@Override
 	public String convert2MP4(String videoSourcePath) throws RemoteException {
-		//扫描文件夹
-		String beginTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
 		String fileType = videoSourcePath.substring(videoSourcePath.lastIndexOf("."));
 		String destPath = StringUtils.replace(videoSourcePath, fileType, ".mp4");
-		new FFMpegUtil("ffmpeg", videoSourcePath, destPath).flv2Mp4();
-		String endTime = new SimpleDateFormat("HH:mm:ss").format(new Date());
-		System.out.println(videoSourcePath+"远程调用转换开始时间:"+beginTime+"结束时间："+endTime );
+		Flv2Mp4Process flv2Mp4Process = new Flv2Mp4Process(videoSourcePath, destPath);
+		new Thread(flv2Mp4Process).start();
+		System.out.println("线程执行中，不等待直接返回。");
 		return destPath;
 	}
+	
 	public static void main(String[] args) {
 		String fileType = "sdfsdfsddf.m2p".substring("sdfsdfsddf.m2p".lastIndexOf("."));
 		System.out.println(fileType);

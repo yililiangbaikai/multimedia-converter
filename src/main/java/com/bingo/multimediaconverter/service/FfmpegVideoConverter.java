@@ -52,7 +52,7 @@ public class FfmpegVideoConverter {
 		System.out.println("This is ffmpegVideoConverter program.");
 		System.out.println("参数1：" + args[0]  + "\n参数2" + args[1]);
 		try { 
-		  LocateRegistry.createRegistry(9099);
+		  LocateRegistry.createRegistry(1099);
 	      //实例化实现了IRmiService接口的远程服务IRmiServiceImpl对象 
 	      IRmiService service = new IRmiServiceImpl("convert2MP4"); 
 	      //将名称绑定到对象,即向命名空间注册已经实例化的远程服务对象 

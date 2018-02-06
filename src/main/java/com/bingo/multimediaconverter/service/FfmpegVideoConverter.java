@@ -56,7 +56,7 @@ public class FfmpegVideoConverter {
 	      //实例化实现了IRmiService接口的远程服务IRmiServiceImpl对象 
 	      IRmiService service = new IRmiServiceImpl("convert2MP4"); 
 	      //将名称绑定到对象,即向命名空间注册已经实例化的远程服务对象 
-	      Naming.rebind("rmi://20.20.23.203:9099/convert2MP4", service); 
+	      Naming.rebind("rmi://20.20.23.203:1099/convert2MP4", service); 
 	    } catch (Exception e) {
 	      e.printStackTrace();
 	      log.error(e);
